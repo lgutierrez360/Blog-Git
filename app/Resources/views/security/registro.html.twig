@@ -1,0 +1,45 @@
+{# app/Resources/views/security/register.html.twig #}
+{# ... you will probably extend your base template, like base.html.twig #}
+{% extends 'base.html.twig' %}
+{% block body %}
+   
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-lg-9 col-md-12">
+                <form action="{{ path('create') }}" method="post">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" placeholder="Nombre" name="_nombre" id="nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Apellido</label>
+                        <input type="text" class="form-control" placeholder="Apellido" name="_apellido" id="apellido">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" class="form-control" placeholder="Email" name="_email" id="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="nombreUser">Nombre de Usuario</label>
+                        <input type="text" class="form-control" placeholder="Nombre de Usuario" name="_nombreUser" id="nombreUser">
+                    </div>
+                    <div class="form-group">
+                        <label for="clave">Clave</label>
+                        <input type="password" class="form-control" placeholder="clave" name="_clave" id="clave">
+                    </div>
+                    <div class="form-group">
+                        <label for="clave_repetir">Repetir Clave</label>
+                        <input type="password" class="form-control" placeholder="Repetir clave" name="_clave_repetir" id="clave_repetir">
+                    </div>
+                    {#
+                        If you want to control the URL the user
+                        is redirected to on success (more details below)
+                        <input type="hidden" name="_target_path" value="/account" />
+                    #}
+                    <button class="btn btn-info" type="submit">Aceptar</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

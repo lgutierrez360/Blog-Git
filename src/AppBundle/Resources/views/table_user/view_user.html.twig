@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+	<div class="container mt-5">
+		<div class="row">
+			<div class="user">
+				<h4 class="fullname">{{ user.surname|upper }} , {{ user.name|upper }}</h4>
+				<p class="email"><b>e-mail :</b> {{ user.email }}</p>
+				<p class="active"><b>Activo :</b>{{ user.active }}</p>
+				<p class="Administrador"><b>Administrador :</b>{{ user.administrator }}</p>
+				<p class="date_post"><b>Solicitud de alta :</b>{{ user.create_at|date('F j, Y, g:i a') }}</p>
+			</div>
+		</div>
+	</div>
+	
+{% endblock %}

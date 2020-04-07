@@ -1,0 +1,22 @@
+#configuración de rutas del bundle
+
+app_bundle_api:
+    resource: "@ApiBundle/Resources/config/routing.yml"
+    prefix:   /api
+
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+   
+#Rutas para controlador user 
+ 
+#api:
+ #   resource: "@ApiBundle/Controller/"
+  #  type:     annotation
+   # prefix:   /api/
+
+#Rutas para controlador user 
+#curso:
+ #   resource: "@CursoBundle/Resources/config/routing.yml"
+    #prefix:   /curso/
+    #type:     rest

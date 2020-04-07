@@ -1,0 +1,47 @@
+AppBundle\Entity\Posts:
+    type: entity
+    table: posts
+    indexes:
+        fk_post_user:
+            columns:
+                - author
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        title:
+            type: string
+            nullable: false
+            length: 100
+            options:
+                fixed: false
+        body:
+            type: string
+            nullable: false
+            length: 500
+            options:
+                fixed: false
+        create_at:
+            type: datetime
+            nullable: true
+            options:
+                default: CURRENT_TIMESTAMP
+            column: create_at
+    manyToOne:
+        author:
+            targetEntity: Users
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                author:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

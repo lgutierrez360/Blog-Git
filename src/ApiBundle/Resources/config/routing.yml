@@ -1,0 +1,53 @@
+
+#entrada_homepage:
+ #   path:   /blog
+  #  defaults:   { _controller: ApiBundle:Default:index }
+
+#entrada_delet:
+ #   path:   /delet
+  #  defaults:   { _controller: ApiBundle:Default:deletEntrada}
+
+#api:
+ #   path:   /api/post
+ #   defaults:   { _controller: ApiBundle:Api:showPost}
+  #  methods:    GET
+
+#api-get:
+ #   path:   /api/post/{id}
+  #  defaults:   { _controller: ApiBundle:Api:showPostAction}
+   # methods:    GET
+
+#api-save:
+ #   path:   /api/post
+  #  defaults:   { _controller: ApiBundle:Api:savePostAction}
+   # methods:    POST
+
+#api-update:
+ #   path:   /api/post/{id}
+  #  defaults:   { _controller: ApiBundle:Api:editPost}
+   # methods:    PUT
+
+user_login:
+    path:   /user
+    defaults:   { _controller: ApiBundle:ApiUser:loginApi}
+    methods:    POST
+
+post_edit:
+    path:   /new
+    defaults:   { _controller: ApiBundle:ApiPost:newPost}
+    methods:    POST
+
+api-delete:
+    path:   /delete/{id}
+    defaults:   { _controller: ApiBundle:ApiPost:deletePost}
+    methods:    DELETE
+
+prueba:
+    path:   /default/{id}
+    defaults: { _controller: ApiBundle:Default:prueba}
+    methods:  GET
+
+api_post:
+    path:   /post/{id}
+    defaults: { _controller: ApiBundle:ApiPost:showPost}
+    methods:  GET

@@ -1,0 +1,107 @@
+{# @KilikTable/_defaultTable.html.twig #}
+{% use "@AppBundle/Resources/views/table/_blocks.html.twig" with
+    tableHeadMassActionsColumn as parent_tableHeadMassActionsColumn,
+    tableFilterMassActionsColumn as parent_tableFilterMassActionsColumn,
+    tableBodyMassActionsColumn as parent_tableBodyMassActionsColumn
+%}
+{# @param Kilik\Components\Table table #}
+{{ form_start(table.formView) }}
+{% block tableBeforePanel %}
+{% endblock tableBeforePanel %}
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <div class="panel-title">
+            {% block tablePagination %}
+                <div id="{{ table.id }}_pagination" class="btn-group">
+                    {% block tablePaginationAjax %}
+                        {% include "@AppBundle/Resources/views/table/_paginationNumbersIcons.html.twig" %}
+                    {% endblock tablePaginationAjax %}
+                </div>
+            {% endblock tablePagination %}
+            {% block tableTitle %}
+                Default title
+            {% endblock tableTitle %}
+        </div>
+    </div>
+    <div class="panel-body table-responsive">
+        <table class="table table-hover table-striped table-bordered" id="{{ table.id }}">
+            <thead>
+                {% block tableHead %}
+                    <tr>
+                        {% block tableHeadMassActionsColumn %}
+                            {{ block('parent_tableHeadMassActionsColumn') }}
+                        {% endblock %}
+                        {% block tableHeadStdColumns %}
+                            {% for column in table.columns %}
+                                {% include "@AppBundle/Resources/views/table/_columnName.html.twig" %}
+                            {% endfor %}
+                        {% endblock tableHeadStdColumns %}
+                    </tr>
+                    {% if table.columns|length > 0 %}
+                        <tr>
+                            {% block tableFilterMassActionsColumn %}
+                                {{ block('parent_tableFilterMassActionsColumn') }}
+                            {% endblock %}
+                            {% block tableHeadStdFilters %}
+                                {% for column in table.columns %}
+                                    {% include "@AppBundle/Resources/views/table/_columnFilter.html.twig" %}
+                                {% endfor %}
+                            {% endblock tableHeadStdFilters %}
+                        </tr>
+                    {% endif %}
+                {% endblock tableHead %}
+            </thead>
+            <tbody id="{{ table.bodyId }}">
+                {% block tableBody %}
+
+                    {% if tableRenderBody is defined %}
+                        {% for row in rows %}
+                            <tr>
+                                <!--  path(profile,{id:row.object.id})  -->
+                                <!--  path(profile,{id:row.object.id})  -->
+                                <td>
+                                <!--  View Post  -->
+                                    <a href="{{ path('detail',{id:row.object.id}) }}">
+                                        <i class="glyphicon glyphicon-search" title="Vizualizar Post"></i>
+                                    </a>
+                                    
+                                    <!--  Delete Post  -->
+                                    <a href="{{ path('deletePost',{id:row.object.id}) }}">
+                                        <i class="glyphicon glyphicon-trash" title="Eliminar Post"></i>
+                                    </a>
+
+                                    <!--  Edit Post  -->
+                                    <a href="{{ path('editPost',{id:row.object.id}) }}">
+                                        <i class="glyphicon glyphicon-edit" title="Editar Post"></i>
+                                    </a>                                                                    
+
+                                </td>
+
+                                {% block tableBodyMassActionsColumn %}
+                                    {{ block('parent_tableBodyMassActionsColumn') }}
+                                {% endblock %}
+                                {% block tableBodyStdColumns %}
+                                    {% for column in table.columns %}
+                                        {% include "@AppBundle/Resources/views/table/_columnCell.html.twig" %}
+                                    {% endfor %}
+                                {% endblock tableBodyStdColumns %}
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                {% endblock tableBody %}
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        {% block tableStats %}
+            <div id="{{ table.id }}_stats">
+                {% block tableStatsAjax %}
+                    {% include "@AppBundle/Resources/views/table/_stats.html.twig" %}
+                {% endblock tableStatsAjax %}
+            </div>
+        {% endblock tableStats %}
+    </div>
+</div>
+{% block tableAfterPanel %}
+{% endblock tableAfterPanel %}
+{{ form_end(table.formView) }}

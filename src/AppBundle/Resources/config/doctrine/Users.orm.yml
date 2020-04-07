@@ -1,0 +1,63 @@
+AppBundle\Entity\Users:
+    type: entity
+    table: users
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        surname:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        email:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        nick:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+            column: nick
+        password:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        create_at:
+            type: datetime
+            nullable: true
+            options:
+                default: CURRENT_TIMESTAMP
+            column: create_at
+        active:
+            type: string
+            nullable: true
+            length: 50
+            options:
+                fixed: false
+        administrator:
+            type: string
+            nullable: true
+            length: 50
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }
