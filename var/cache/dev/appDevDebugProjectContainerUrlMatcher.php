@@ -112,41 +112,49 @@ class appDevDebugProjectContainerUrlMatcher extends Symfony\Bundle\FrameworkBund
             }
             not_user_login:
 
-            // post_edit
+            // prueba
+            if (0 === strpos($pathinfo, '/api/default') && preg_match('#^/api/default/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                    $allow = array_merge($allow, array('GET', 'HEAD'));
+                    goto not_prueba;
+                }
+
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'prueba')), array (  '_controller' => 'ApiBundle\\Controller\\DefaultController::pruebaAction',));
+            }
+            not_prueba:
+
+            // api_edit
+            if (0 === strpos($pathinfo, '/api/edit') && preg_match('#^/api/edit/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                if ($this->context->getMethod() != 'PUT') {
+                    $allow[] = 'PUT';
+                    goto not_api_edit;
+                }
+
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'api_edit')), array (  '_controller' => 'ApiBundle\\Controller\\ApiPostController::savePostAction',));
+            }
+            not_api_edit:
+
+            // api_new
             if ($pathinfo === '/api/new') {
                 if ($this->context->getMethod() != 'POST') {
                     $allow[] = 'POST';
-                    goto not_post_edit;
+                    goto not_api_new;
                 }
 
-                return array (  '_controller' => 'ApiBundle\\Controller\\ApiPostController::newPostAction',  '_route' => 'post_edit',);
+                return array (  '_controller' => 'ApiBundle\\Controller\\ApiPostController::savePostAction',  '_route' => 'api_new',);
             }
-            not_post_edit:
+            not_api_new:
 
-            if (0 === strpos($pathinfo, '/api/de')) {
-                // api-delete
-                if (0 === strpos($pathinfo, '/api/delete') && preg_match('#^/api/delete/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
-                    if ($this->context->getMethod() != 'DELETE') {
-                        $allow[] = 'DELETE';
-                        goto not_apidelete;
-                    }
-
-                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'api-delete')), array (  '_controller' => 'ApiBundle\\Controller\\ApiPostController::deletePostAction',));
+            // api-delete
+            if (0 === strpos($pathinfo, '/api/delete') && preg_match('#^/api/delete/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                if ($this->context->getMethod() != 'DELETE') {
+                    $allow[] = 'DELETE';
+                    goto not_apidelete;
                 }
-                not_apidelete:
 
-                // prueba
-                if (0 === strpos($pathinfo, '/api/default') && preg_match('#^/api/default/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
-                    if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
-                        $allow = array_merge($allow, array('GET', 'HEAD'));
-                        goto not_prueba;
-                    }
-
-                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'prueba')), array (  '_controller' => 'ApiBundle\\Controller\\DefaultController::pruebaAction',));
-                }
-                not_prueba:
-
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'api-delete')), array (  '_controller' => 'ApiBundle\\Controller\\ApiPostController::deletePostAction',));
             }
+            not_apidelete:
 
             // api_post
             if (0 === strpos($pathinfo, '/api/post') && preg_match('#^/api/post/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {

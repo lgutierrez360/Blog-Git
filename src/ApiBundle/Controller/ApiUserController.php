@@ -15,16 +15,17 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;     
-use AppBundle\Services\JwtAuth;
+//use AppBundle\Services\JwtAuth;
 /**
  * 
  */
 class ApiUserController extends Controller{
-     /**
-     * @Route("/login_blog", name="login_blog")
-     */
+    /**
+    * @Route("/login_blog", name="login_blog")
+    */
     
-    public function loginApiAction(Request $request, JwtAuth $jwt_auth){
+    public function loginApiAction(Request $request){
+        $jwt_auth = $this->get('app.jwtauth');
         
         $data = [
             'status'       => 'error',
@@ -37,35 +38,27 @@ class ApiUserController extends Controller{
         $params = json_decode($json);  
         
         if( !empty($json) ){
-            //$data = $jwt_auth->pruebajw();
-            #$jwt_auth = new JwtAuth();
 
             $email     = ( !empty($params->email) )?$params->email:null;
             $password  = ( !empty($params->password) )?$params->password:null;
             $getToken  = ( !empty($params->getToken) )?$params->getToken:null;
             
             if (!empty($email) && !empty($password) ){
-                #cifrar la contrasenia                
-                $opciones = [
-                    'cost' => 4,
-                ];
-                $psw = password_hash($password, PASSWORD_BCRYPT, $opciones);
-
+                             
                 #Obtengo el token
                 if (!empty($getToken)) {
-                    $signup = $jwt_auth->signup($email, $psw, $getToken); 
+                    $signup = $jwt_auth->signup($email, $password, $getToken); 
                 }else{
-                    $signup = $jwt_auth->signup($email, $psw); 
-                    echo '<pre>';
-                    dump($signup);
-                    echo '</pre>';
-                    die();
+                    $signup = $jwt_auth->signup($email, $password); 
                 }
-                $data = $signup;
+
+                $data = $signup;   
+                                        
             }
-        }      
+        }
 
         return new JsonResponse($data);                    
+              
     }
     
 }

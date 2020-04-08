@@ -19,10 +19,10 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-class ApiPostController extends Controller
-{    
+class ApiPostController extends Controller{    
     /**
-    * @return array 
+    * @param $post | json 
+    * @return post | array 
     */
     private function serializarPost(Posts $post){
         return array(
@@ -34,124 +34,179 @@ class ApiPostController extends Controller
     }
     /**
     * @return Rpta Json Post 
+    * @param  id | int. 
     */
-    public function showPostAction(Request $request, $id=null){    	
+    public function showPostAction(Request $request, $id=null){
+        
+        #respuestas por default
         $data = [
             'status'       => 'error',
             'code'         =>  400,
             'message'      => 'Post no encontrado'
         ];   
-        if (isset($id) && !empty($id)){
-        	$post= $this->getDoctrine()->getRepository(Posts::class)->findOneBy([
-        		 'id' => $id
-        	]);
 
-            if($post && is_object($post)) {            
-                $post_array = $this->serializarPost($post);                    
-                $data = [
-                    'status'       => 'success',
-                    'code'         => 200,               
-                    'post'         => $post_array                
-                ];
+        #llamada al servicio JWT        
+        $jwt_auth = $this->get('app.jwtauth');
+        
+        #Recoger la cabecer de autenticacion 
+        $token = $request->headers->get('Authorization');
+        #Comprobar que el metodo es correcto
+        $authCheck = $jwt_auth->checkToken($token);
 
-            }
-        }        
+
+        if ($authCheck) {
+            if (isset($id) && !empty($id)){
+                $post= $this->getDoctrine()->getRepository(Posts::class)->findOneBy([
+                     'id' => $id
+                ]);
+
+                if($post && is_object($post)) {            
+                    $post_array = $this->serializarPost($post);                    
+                    $data = [
+                        'status'       => 'success',
+                        'code'         => 200,               
+                        'post'         => $post_array                
+                    ];
+                }
+            }        
+        } 
         //return resjson($data);
         return new JsonResponse(
             ['post' => $data]
         );
     }
-    /**
-    * @return Rpta Json de la confirmacion de la eliminacion del Post 
-    */    
 
+    /**
+    * @param  id | int. 
+    * @return Rpta Json de la confirmacion de la eliminacion del Post 
+    */ 
     public function deletePostAction(Request $request, $id=null){
         $data = [
             'status'       => 'error',
             'code'         =>  400,
             'message'      => 'No se pudo eliminar el Post'
         ];
-        if (isset($id) && !empty($id)) {
-            $post= $this->getDoctrine()->getRepository(Posts::class)->findOneBy([
-                 'id' => $id
-            ]);          
+        #llamda al servicio JWT        
+        $jwt_auth = $this->get('app.jwtauth');
+        
+        #Recoger la cabecer de autenticacion 
+        $token = $request->headers->get('Authorization');
+        #Comprobar que el metodo es correcto
+        $authCheck = $jwt_auth->checkToken($token);
 
-            if($post && is_object($post)) {            
-                #Elimino el post
-                $post_delete = $this->getDoctrine()->getManager();
-                $post_delete->remove($post);
-                $post_delete->flush();
-                $post_delete->clear();
-                
-                $post_array = $this->serializarPost($post);                    
-                
-                $data = [
-                    'status'       => 'success',
-                    'code'         => 200,               
-                    'post'         => $post_array                
-                ];
+        if ($authCheck) {
+            if (isset($id) && !empty($id)) {
+                $post= $this->getDoctrine()->getRepository(Posts::class)->findOneBy([
+                     'id' => $id
+                ]);          
+                $identity = $jwt_auth->checkToken($token,true);
+
+                if($post && is_object($post) && is_object($post) && $post->getAuthor()->getId()==$identity->sub) {            
+                    #Elimino el post
+                    $post_delete = $this->getDoctrine()->getManager();
+                    $post_delete->remove($post);
+                    $post_delete->flush();
+                    $post_delete->clear();
+                    
+                    $post_array = $this->serializarPost($post);                    
+                    
+                    $data = [
+                        'status'       => 'success',
+                        'code'         => 200,               
+                        'post'         => $post_array                
+                    ];
+                }
             }
-
-        }
+        }        
         return new JsonResponse(
             ['post' => $data]
         );
     }
 
-    //public function saveEntradaAction(Request $request){
-    public function savePostAction(Request $request, JwtAuth $jwt_auth){
-    	#respuesta por default
-    	$data=[
-	        'status'=>'error',
-	        'code'=>400,
-	        'message'=>'No se pudo crear el Blog.'				        
-	    ]; 
+    /**
+    * @param  id | int del Post (Blog). 
+    * @return Rpta Json confirmacion save del Post 
+    */
+    public function savePostAction(Request $request, $id=null){
+        #respuesta por default
+        $data=[
+            'status'=>'error',
+            'code'=>400,
+            'message'=>'No se pudo crear el Blog.'                      
+        ]; 
 
-    	#recoger el token 
-    	$token= $request->header->get('Authorization',null);
-    	#Comprobar el token
-    	$auth_check =  $jwt_auth->checkToken($token);
-    	if ($auth_check){
-    		#recoger datos por post
-    		$json = $reguest->get('json',null);
-    		$params = json_decode($json);
+        #llamada al servicio JWT        
+        $jwt_auth = $this->get('app.jwtauth');
+        
+        #Recoger la cabecer de autenticacion 
+        $token = $request->headers->get('Authorization');
 
-    		#recojemos el objeto del usuario identificado
-    		$identity =  $jwt_auth->checkToken($token,true);
+        #Comprobar que el metodo es correcto
+        $authCheck = $jwt_auth->checkToken($token);
+        
+        if ($authCheck){
+            #recoger datos por post
+            $json = $request->get('json',null);
 
-    		#comprobar y validar los datos
-    		if (!empty($json)) {
-				$author = ($identity->sub != null)?$identity->sub:null;
-				$title = ( !empty($params->title) )?$params->title:null;
-				$body = ( !empty($params->body) )?$params->body:null;
-				
-				if (!empty($author) && !empty($title) && !empty($body)) {
-					#guardar el post
-					$post_insert = $this->getDoctrine()->getManager();
-					$user= $this->getDoctrine()->getRepository(Users::class)->findOneBy([
-						'id' => $author
-					]); 	
-					
-					$post = new Posts();
-					$post->setAuthor($user); 
-					$post->setTitle($title); 
-					$post->setBody($body); 
-					$post->setCreate_at(new \Datetime('now'));
+            #recojemos el objeto del usuario identificado
+            $identity =  $jwt_auth->checkToken($token,true);
 
-					$post_insert->persist($post);
-        			$post_insert->flush();
+            #comprobar y validar los datos
+            if (!empty($json)) {
+                $params = json_decode($json);
 
+                $author = ($identity->sub != null)?$identity->sub:null;
+                $title = ( !empty($params->title) )?$params->title:null;
+                $body = ( !empty($params->body) )?$params->body:null;
+                #comprueba la existencia del usuario        
+                $user= $this->getDoctrine()->getRepository(Users::class)->findOneBy([
+                    'id' => $author
+                ]);                             
+                
+                if (!empty($author) && !empty($title) && !empty($body) && is_object($user)) {
 
-        			$data=[
-				        'status'=>'success',
-				        'code'=>200,
-				        'message'=>'El Blog fue Correctamente creado.'				        
-				    ]; 
-				}
-    		}
-    	}
-		return $this->resjson($data);    			
-		//return $this->JsonResponse($data);    			                       
+                    $post_save = $this->getDoctrine()->getManager();
+                    if ($id == null){
+                        #crear nuevo post
+                        $post = new Posts();
+                        $post->setAuthor($user);                                    
+                        $post->setTitle($title); 
+                        $post->setBody($body); 
+                        $post->setCreate_at(new \Datetime('now'));
+                        $post_save->persist($post);
+                        $post_save->flush();
+                        
+                        $data=[
+                            'status'=>'success',
+                            'code'=>200,
+                            'message'=>'El Blog fue Correctamente creado.'                      
+                        ]; 
+                        
+                    }else{
+                        #update post existente
+                        $post= $this->getDoctrine()->getRepository(Posts::class)->findOneBy([
+                            'id'     => $id,
+                            'author' => $identity->sub
+                        ]);
+                        if (isset($post) && !empty($post) && is_object($post)) {
+                            $post->setTitle($title); 
+                            $post->setBody($body);                         
+
+                            $post_save->persist($post);
+                            $post_save->flush();
+                            $data=[
+                                'status'=>'success',
+                                'code'=>200,
+                                'message'=>'El Blog fue actualizado creado.'                      
+                            ];
+                        }                         
+                    }
+                }
+            }
+        }        
+        return new JsonResponse(
+            ['post' => $data]
+        );                                     
     }
 
     public function editPostAction(Request $request){
