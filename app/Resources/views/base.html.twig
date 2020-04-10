@@ -4,57 +4,79 @@
         <meta charset="UTF-8" />
         <title>{% block title %}Blog!{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{{asset('vendor/bootstrap/css/bootstrap.min.css')}}">
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <style>
+            .menu {
+                background: #343a40;
+                list-style: none;
+                padding: 0;
+                width: 100%;
+                max-width: 200%;
+                margin:20px auto;
+            }
+            .menu li {
+                display: inline-block;
+                text-align: center;
+            }
+            .menu li a {
+                color: #fff;
+                text-decoration: none;
+                display: inline-block;
+                padding: 20px;
+            }
+            .menu li a:hover {
+                background: #384552;
+            }
+            .izquierda{float: left;}
+            .derecha{float: right;}
+
+
+             </style>
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
         <header>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div class="container">
-                    <a href="{{path('homepage')}}" class="navbar-brand">MI BLOG</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Alternar Menu">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="row">
-                        <div class="collapse navbar-collapse d-flex justify-content-end" id="menuNavegacion">
-                            <ul class="navbar-nav mr-auto">
-                                <li class="nav-item">
-                                    <a href="{{path('homepage')}}" class="nav-link">Inicio</a>
+            <div class="row">
+                <div class="col-12 mt-0">                                        
+                    <ul class="menu">
+                        <div class="container">
+                            <li>
+                                <a href="{{path('homepage')}}">Mi Blog</a>
+                            </li>
+                            {% if app.user%}
+                                <!--Usuario Logueado-->
+                                <li class="derecha">
+                                    <a href="{{path('logout')}}">Cerrar Session</a>
+                                </li>
+                                <li class="derecha">
+                                    <a href="{{path('post')}}">Publicaciones {{app.user.surname|upper}}</a>
+                                </li>
+                                
+                                {% if app.user.administrator == 'SI' %}
+                                    <!--Usuario Administrador-->
+                                    <li class="derecha">
+                                        <a href="{{path('profile')}}">Listado Usuarios</a>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                <!--Usuario no Logueado-->
+                                <li class="derecha">
+                                    <a href="{{path('register')}}">Registro</a>
+                                </li>
+                                <li class="derecha">
+                                    <a href="{{path('login')}}">Login</a>
                                 </li>
 
-                                {% if app.user%}
-                                    <!--Usuario Logueado-->
-                                    <li class="nav-item">
-                                        <a href="{{path('post')}}" class="nav-link">Blog</a>
-                                    </li>
-                                    
-                                    {% if app.user.administrator == 'SI' %}
-                                        <!--Usuario Administrador-->
-                                        <li class="nav-item">
-                                            <a href="{{path('profile')}}" class="nav-link">List User</a>
-                                        </li>
-                                    {% endif %}
-                                    <li class="nav-item">
-                                        <a href="{{path('logout')}}" class="nav-link">Cerrar Session</a>
-                                    </li>
-                                {% else %}
-                                    <!--Usuario no Logueado-->
-                                    <li class="nav-item">
-                                        <a href="{{path('login')}}" class="nav-link">Login</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{path('register')}}" class="nav-link">register</a>
-                                    </li>
-
-                                {% endif %}
-                                {#% if session->get('user',loginUser) %}
-
-                                {% endif  %#}
-                            </ul>
+                            {% endif %}
+                            <li class="derecha">
+                                <a href="{{path('homepage')}}">Inicio</a>
+                            </li>
                         </div>
-                    </div>
+                    </ul>
                 </div>
-            </nav>
+            </div> 
+
         </header>
         {% block body %}{% endblock %}
             <script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>            

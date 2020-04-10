@@ -105,10 +105,10 @@ class PostController extends Controller{
     
 
      /**
-     * @Route("/post/{id}", name="detail")     
+     * @Route("/post/{id}", name="detailPostLogueado")     
      *
      */
-    public function detail(Posts $post){ 
+    public function detailPostLogueado(Posts $post){ 
    	    if (!$post){
             return $this->redirectToRoute('post');
         }else{
@@ -117,6 +117,20 @@ class PostController extends Controller{
 
             ]); 
         }    	 	        
+    }
+    /**
+     * @Route("/blog/{id}", name="detailPostPublico")     
+     *
+     */
+    public function detailPostPublico(Posts $post){ 
+        if (!$post){
+            return $this->redirectToRoute('post');
+        }else{
+            return $this->render('@AppBundle/Resources/views/table_post/view_post.html.twig',[
+                'post'=>$post
+
+            ]); 
+        }                   
     }
     /**
     * @Route ("/create_post", name ="create_post")
@@ -148,7 +162,7 @@ class PostController extends Controller{
         	$post_insert->flush();
         	
         	return $this->redirect(
-        		$this->generateUrl('detail',['id'=>$post->getId()])
+        		$this->generateUrl('detailPostLogueado',['id'=>$post->getId()])
         	);
         }
 
@@ -200,7 +214,7 @@ class PostController extends Controller{
         	$post_edit->flush();
         	
         	return $this->redirect(
-        		$this->generateUrl('detail',['id'=>$post->getId()])
+        		$this->generateUrl('detailPostLogueado',['id'=>$post->getId()])
         	);
         }
 

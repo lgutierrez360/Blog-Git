@@ -3,7 +3,17 @@
 {% block body %}
 
 	<div class="container">
-		<div class="row mt-5">
+		<div class="row mt-5 justify-content-center">
+            <div class="col-12">
+                <h4>Nuevo Blog</h4>
+                <hr class="bg-info">
+            </div>
+            <div class="col-12">
+                <p class=" pb-0 mb-0">Te invitamos a registrar un nuevo Blog</p>
+                <p class="text-danger small pt-0 mt-0">*Todos los campos son obligatorios</p>
+            </div>                  
+        </div>
+		<div class="row mt-3">
 			<div class="col-lg-9 col-md-12">
 	           
 	           {{ form_start( form ) }}

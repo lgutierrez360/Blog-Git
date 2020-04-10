@@ -25,9 +25,19 @@ security:
                 login_path: login
                 check_path: login
                 provider  : proveedor
+                default_target_path: post #path name after login
+
             logout:
                 path:  /logout
                 target: /login
+
+    access_control:
+        - { path: ^/post, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/profile, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/create_post, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/user, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/list_user_ajax, roles: IS_AUTHENTICATED_FULLY }
+                                        
             # activate different ways to authenticate
 
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate

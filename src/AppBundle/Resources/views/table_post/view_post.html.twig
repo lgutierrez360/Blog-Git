@@ -2,12 +2,12 @@
 {% block body %}
 
 	<div class="container mt-5">
-		<div class="row">
-			<div class="post">
+		<div class="row justify-content-center">
+			<div class="post col-9">
 				<h4 class="title">{{ post.title|upper }}</h4>
-				<p class="date_post"><b>Publicado :</b>{{ post.create_at|date('F j, Y, g:i a') }}</p>
+                <hr class="bg-info">
+				<p class="date_post small"><b>Publicado :</b>{{ post.create_at|date('F j, Y, g:i a') }}</p>
 				<p class="body">{{ post.body }}</p>
-
 			</div>
 		</div>
 	</div>

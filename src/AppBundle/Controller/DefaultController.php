@@ -40,7 +40,7 @@ class DefaultController extends Controller{
         );
     }
     /**
-     * @Route("/post_ajax", name="post_ajax")
+     * @Route("/ajax_post", name="ajax_post")
      */
     public function ajaxPostAction(Request $request){
 
@@ -49,8 +49,9 @@ class DefaultController extends Controller{
             $request
         );
     }
-    /*
-    *Funcion que recupera todos los POST (Blog) de un usuario
+    
+    /**
+    * @return  que recupera todos los POST (Blog)
     */
     public function tablePost(){   
 
@@ -62,7 +63,7 @@ class DefaultController extends Controller{
         $table = (new Table())
             ->setRowsPerPage(10)
             ->setId('table_posts')
-            ->setPath($this->generateUrl('post_ajax'))
+            ->setPath($this->generateUrl('ajax_post'))
             ->setQueryBuilder($queryBuilder, 'p')                        
             ->setTemplate('@AppBundle/Resources/views/table_post/table_post_publico.html.twig')                        
 

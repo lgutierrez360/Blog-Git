@@ -2,9 +2,10 @@
 {% block body %}
 
 	<div class="container mt-5">
-		<div class="row">
-			<div class="user">
+		<div class="row justify-content-center">
+			<div class="user col-9">
 				<h4 class="fullname">{{ user.surname|upper }} , {{ user.name|upper }}</h4>
+				<hr class="bg-info">
 				<p class="email"><b>e-mail :</b> {{ user.email }}</p>
 				<p class="active"><b>Activo :</b>{{ user.active }}</p>
 				<p class="Administrador"><b>Administrador :</b>{{ user.administrator }}</p>

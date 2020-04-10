@@ -26,8 +26,6 @@ class SecurityController extends Controller{
 
    		$jwt_auth = $this->get("app.jwtauth");
 
-   		//echo $jwt_auth->signup();
-
 	    //return $this->render('security/login.html.twig');
 	    
 	    $authenticationUtils = $this->get('security.authentication_utils');
