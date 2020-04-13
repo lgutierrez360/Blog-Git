@@ -64,25 +64,32 @@ class UserController extends Controller{
      * @Route("/user/{id}", name="detailUser")     
      *
      */
-    public function detailUser(Users $user){        
-            
-        if (!$user){
+    public function detailUser($id){        
+        $em = $this->getDoctrine()->getRepository(Users::class);
+        $user = $em->findOneBy([
+            'id' => $id
+        ]);
+        if (!isset($user) || empty($user) || !is_object($user) ){
+
             return $this->redirectToRoute('profile');
         }else{
             return $this->render('@AppBundle/Resources/views/table_user/view_user.html.twig',[
                 'user'=>$user
 
             ]); 
-        }
-        
+        }        
     }
      /**
      * @Route("/user/status/{id}", name="estatusUser")     
      *
      */
-    public function estatusUser(Users $user){        
+    public function estatusUser($id){        
+        $em = $this->getDoctrine()->getRepository(Users::class);
+        $user = $em->findOneBy([
+            'id' => $id
+        ]);
+        if (!isset($user) || empty($user) || !is_object($user) ){
 
-        if (!$user){
             return $this->redirectToRoute('profile');
         }else{
             ($user->getActive() == 'SI')? $status = 'NO' : $status = 'SI';

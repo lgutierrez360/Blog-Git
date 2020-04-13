@@ -10,22 +10,22 @@ prueba:
     methods:  GET
 
 api_edit:
-    path:   /edit/{id}
+    path:   /posts/{id}
     defaults:   { _controller: ApiBundle:ApiPost:savePost}
     methods:    PUT
 
 api_new:
-    path:   /new
+    path:   /posts
     defaults:   { _controller: ApiBundle:ApiPost:savePost}
     methods:    POST
 
 api-delete:
-    path:   /delete/{id}
+    path:   /posts/{id}
     defaults:   { _controller: ApiBundle:ApiPost:deletePost}
     methods:    DELETE
 
 
 api_post:
-    path:   /post/{id}
+    path:   /posts/{id}
     defaults: { _controller: ApiBundle:ApiPost:showPost}
     methods:  GET

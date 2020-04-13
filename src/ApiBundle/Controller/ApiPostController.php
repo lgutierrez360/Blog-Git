@@ -113,7 +113,7 @@ class ApiPostController extends Controller{
                     $data = [
                         'status'       => 'success',
                         'code'         => 200,               
-                        'post'         => $post_array                
+                        'message'      => 'Post eliminado'                
                     ];
                 }
             }

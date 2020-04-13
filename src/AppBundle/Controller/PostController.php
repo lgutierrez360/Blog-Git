@@ -107,14 +107,17 @@ class PostController extends Controller{
      /**
      * @Route("/post/{id}", name="detailPostLogueado")     
      *
-     */
-    public function detailPostLogueado(Posts $post){ 
-   	    if (!$post){
+     */    
+    public function detailPostLogueado($id){
+        $em = $this->getDoctrine()->getRepository(Posts::class);
+        $post = $em->findOneBy([
+            'id' => $id
+        ]);
+   	    if (!isset($post) || empty($post) || !is_object($post)){
             return $this->redirectToRoute('post');
         }else{
             return $this->render('@AppBundle/Resources/views/table_post/view_post.html.twig',[
                 'post'=>$post
-
             ]); 
         }    	 	        
     }
@@ -122,9 +125,13 @@ class PostController extends Controller{
      * @Route("/blog/{id}", name="detailPostPublico")     
      *
      */
-    public function detailPostPublico(Posts $post){ 
-        if (!$post){
-            return $this->redirectToRoute('post');
+    public function detailPostPublico($id){ 
+        $em = $this->getDoctrine()->getRepository(Posts::class);
+        $post = $em->findOneBy([
+            'id' => $id
+        ]);
+        if (!isset($post) || empty($post) || !is_object($post)){
+            return $this->redirectToRoute('homepage');
         }else{
             return $this->render('@AppBundle/Resources/views/table_post/view_post.html.twig',[
                 'post'=>$post
@@ -174,9 +181,12 @@ class PostController extends Controller{
      * @Route("/post/delete/{id}", name="deletePost")     
      *
      */
-    public function delete(Posts $post){    	
-    		
-    	if (!$post){
+    public function delete($id){    	
+    	$em = $this->getDoctrine()->getRepository(Posts::class);
+        $post = $em->findOneBy([
+            'id' => $id
+        ]);
+        if (!isset($post) || empty($post) || !is_object($post)){
     		return $this->redirectToRoute('post');
     	}else{
     		$post_insert = $this->getDoctrine()->getManager();
@@ -191,37 +201,46 @@ class PostController extends Controller{
      * @Route("/post/edit/{id}", name="editPost")     
      *
      */
-    public function editPost(Request $request,  Posts $post){    	
-    	#Editar el Formulario
-    	$form = $this->createForm(PostType::class,$post);
+    public function editPost(Request $request,$id){
+        $em = $this->getDoctrine()->getRepository(Posts::class);
+        $post = $em->findOneBy([
+            'id' => $id
+        ]);
 
-    	#Rellenar el formulario con los datos del Request
-        $form->handleRequest($request);
+        if (isset($post) && !empty($post) && is_object($post) ){
 
-        if ($form->isSubmitted()) {
+        	#Editar el Formulario
+        	$form = $this->createForm(PostType::class,$post);
 
-            #llamo al servicxio decorador
-            $decorador = $this->get('app.transform_text');            
-            
-            $titleConverted = $decorador->convertTextForm($post->getTitle());
-            $bodyConverted  = $decorador->convertTextForm($post->getBody());
-            $post->setTitle($titleConverted);                                    
-            $post->setBody($bodyConverted);
-        	$post->setCreate_at(new \Datetime('now'));	
+        	#Rellenar el formulario con los datos del Request
+            $form->handleRequest($request);
 
-        	$post_edit = $this->getDoctrine()->getManager();
-        	$post_edit->persist($post);
-        	$post_edit->flush();
-        	
-        	return $this->redirect(
-        		$this->generateUrl('detailPostLogueado',['id'=>$post->getId()])
-        	);
-        }
+            if ($form->isSubmitted()) {
 
-    	return $this->render('@AppBundle/Resources/views/table_post/create_post.html.twig',[
-    		'form'=>$form->createView()
-    	]);
-        
+                #llamo al servicxio decorador
+                $decorador = $this->get('app.transform_text');            
+                
+                $titleConverted = $decorador->convertTextForm($post->getTitle());
+                $bodyConverted  = $decorador->convertTextForm($post->getBody());
+                $post->setTitle($titleConverted);                                    
+                $post->setBody($bodyConverted);
+            	$post->setCreate_at(new \Datetime('now'));	
+
+            	$post_edit = $this->getDoctrine()->getManager();
+            	$post_edit->persist($post);
+            	$post_edit->flush();
+            	
+            	return $this->redirect(
+            		$this->generateUrl('detailPostLogueado',['id'=>$post->getId()])
+            	);
+            }
+
+        	return $this->render('@AppBundle/Resources/views/table_post/create_post.html.twig',[
+        		'form'=>$form->createView()
+        	]);
+        }else{
+            return $this->redirectToRoute('post');
+        }        
     }
 }
 
