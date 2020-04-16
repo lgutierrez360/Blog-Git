@@ -55,26 +55,35 @@ class SecurityController extends Controller{
 
         #Comprobar si el formulario fue enviado
         if ($form->isSubmitted()) {
-        	#modifique el objeto para guardarlo
+            #validacion del form desde el lado del servidor a traves del uso de los assert
+            $validator = $this->get('validator');
+            $errors = $validator->validate($user);
+            if (count($errors) > 0) {
+                $errorsString = (string) $errors; 
+                return $this->render('security/register.html.twig', [
+                    'form'=>$form->createView()
+                ]);   
+            }else{            	
+                #modifique el objeto para guardarlo
 
-	        $factory = $this->get("security.encoder_factory");
-	        $encoder = $factory->getEncoder($user);
-	        $password = $encoder->encodePassword(
-	            $form->get("password")->getData(),
-	            $user->getSalt()
-	        );
+    	        $factory = $this->get("security.encoder_factory");
+    	        $encoder = $factory->getEncoder($user);
+    	        $password = $encoder->encodePassword(
+    	            $form->get("password")->getData(),
+    	            $user->getSalt()
+    	        );
+            	//$encoded =  $encoder->encodePassword($user,$user->getPassword());
+            	$user->setPassword($password);
+            	$user->setActive('NO');
+                $user->setAdministrator('NO');
+                $user->setCreate_at(new \Datetime('now'));
+                $user_insert= $this->getDoctrine()->getManager();
+    			$user_insert->persist($user);
+                $user_insert->flush();        	
+            	
+            	return $this->redirectToRoute('post');  	
+            }
 
-        	//$encoded =  $encoder->encodePassword($user,$user->getPassword());
-        	$user->setPassword($password);
-        	$user->setActive('NO');
-            $user->setAdministrator('NO');
-            $user->setCreate_at(new \Datetime('now'));
-            $user_insert= $this->getDoctrine()->getManager();
-			$user_insert->persist($user);
-
-            $user_insert->flush();        	
-        	
-        	return $this->redirectToRoute('profile');  	
         }
 
         return $this->render('security/register.html.twig',[

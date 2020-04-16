@@ -3,13 +3,17 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
-
+//use Symfony\Component\Security\Core\User\UserInterface;
+/*
+AdvancedUserInterface extiende a UserInterface y necesaria para implementar el acceso de usuarios 
+*/
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UsersRepository")
  */
-class Users implements UserInterface
+class Users implements AdvancedUserInterface
 {
     /**
      * @var integer
@@ -18,26 +22,31 @@ class Users implements UserInterface
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     private $name;
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     private $surname;
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     private $email;
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     private $nick;
 
     /**
      * @var string
+     * @Assert\NotBlank()     
      */
     private $password;
 
@@ -270,21 +279,30 @@ class Users implements UserInterface
         return null; 
     }
     public function eraseCredentials(){  }
-    /*public function jsonSerializable():array{
-        return [
-            
+    
+    /*
+    Metodos necesarios para implementar la interface AdvancedUserInterface
+    */
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
 
-            'id'=>$this->id,
-            'nombre'=>$this->nombre,
-            'apellido'=>$this->apellido,
-            'email'=>$this->email,
-            'nombreUser'=>$this->nombreUser,
-            'clave'=>$this->clave,
-            'fechaCreacion'=>$this->fechaCreacion,
-            'activo'=>$this->activo,
-            'administrador'=>$this->administrador,
-        ];
-    }*/
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->active;
+        //return $this->isActive;
+    }
 
 }
 

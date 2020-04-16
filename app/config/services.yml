@@ -22,4 +22,10 @@ services:
         class: AppBundle\Services\Helpers
         public: true #Funciona aunque no este declarado
 
+    #app.fixture:
+     #   class: AppBundle\DataFixture\Orm
+      #  public: true
 
+    #AppBundle\DataFixture\:
+     #   resource: '../../src/AppBundle/DataFixture'
+      #  tags: ['doctrine.fixture.orm']

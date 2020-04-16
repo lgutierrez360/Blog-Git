@@ -50,7 +50,7 @@
                                     <a href="{{path('logout')}}">Cerrar Session</a>
                                 </li>
                                 <li class="derecha">
-                                    <a href="{{path('post')}}">Publicaciones {{app.user.surname|upper}}</a>
+                                    <a href="{{path('post')}}">Publicaciones {{app.user.nick|upper}}</a>
                                 </li>
                                 
                                 {% if app.user.administrator == 'SI' %}

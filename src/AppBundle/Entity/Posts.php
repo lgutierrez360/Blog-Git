@@ -1,7 +1,7 @@
 <?php
 
 namespace AppBundle\Entity;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Posts
  */
@@ -13,11 +13,13 @@ class Posts {
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     private $title;
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     private $body;
 

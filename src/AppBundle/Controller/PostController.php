@@ -152,25 +152,35 @@ class PostController extends Controller{
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            #estilo a titulo y a parrafo
-            
-            $decorador = $this->get('app.transform_text');            
-        	
-            $titleConverted = $decorador->convertTextForm($post->getTitle());
-            $bodyConverted  = $decorador->convertTextForm($post->getBody());
-            $post->setTitle($titleConverted);                                    
-            $post->setBody($bodyConverted);                               
+            #validacion del form desde el lado del servidor a traves del uso de los assert
+            $validator = $this->get('validator');
+            $errors = $validator->validate($post);
+            if (count($errors) > 0) {
+                $errorsString = (string) $errors;
+                
+                return $this->render('@AppBundle/Resources/views/table_post/create_post.html.twig',[
+                    'form'=>$form->createView()
+                ]);
+            }else{
+                #estilo a titulo y a parrafo            
+                $decorador = $this->get('app.transform_text');            
+            	
+                $titleConverted = $decorador->convertTextForm($post->getTitle());
+                $bodyConverted  = $decorador->convertTextForm($post->getBody());
+                $post->setTitle($titleConverted);                                    
+                $post->setBody($bodyConverted);                               
 
-            $post->setCreate_at(new \Datetime('now'));
-        	$post->setAuthor($user);        	        	            
-        	$post_insert = $this->getDoctrine()->getManager();
+                $post->setCreate_at(new \Datetime('now'));
+            	$post->setAuthor($user);        	        	            
+            	$post_insert = $this->getDoctrine()->getManager();
 
-        	$post_insert->persist($post);
-        	$post_insert->flush();
-        	
-        	return $this->redirect(
-        		$this->generateUrl('detailPostLogueado',['id'=>$post->getId()])
-        	);
+            	$post_insert->persist($post);
+            	$post_insert->flush();
+            	
+            	return $this->redirect(
+            		$this->generateUrl('detailPostLogueado',['id'=>$post->getId()])
+            	);
+            }
         }
 
     	return $this->render('@AppBundle/Resources/views/table_post/create_post.html.twig',[
@@ -217,22 +227,34 @@ class PostController extends Controller{
 
             if ($form->isSubmitted()) {
 
-                #llamo al servicxio decorador
-                $decorador = $this->get('app.transform_text');            
+                #validacion del form desde el lado del servidor a traves del uso de los assert
+                $validator = $this->get('validator');
+                $errors = $validator->validate($post);
+                if (count($errors) > 0) {
+                    $errorsString = (string) $errors;
                 
-                $titleConverted = $decorador->convertTextForm($post->getTitle());
-                $bodyConverted  = $decorador->convertTextForm($post->getBody());
-                $post->setTitle($titleConverted);                                    
-                $post->setBody($bodyConverted);
-            	$post->setCreate_at(new \Datetime('now'));	
+                    return $this->render('@AppBundle/Resources/views/table_post/create_post.html.twig',[
+                        'form'=>$form->createView()
+                    ]);
+                    
+                }else{
+                    #llamo al servicxio decorador
+                    $decorador = $this->get('app.transform_text');            
+                    
+                    $titleConverted = $decorador->convertTextForm($post->getTitle());
+                    $bodyConverted  = $decorador->convertTextForm($post->getBody());
+                    $post->setTitle($titleConverted);                                    
+                    $post->setBody($bodyConverted);
+                	$post->setCreate_at(new \Datetime('now'));	
 
-            	$post_edit = $this->getDoctrine()->getManager();
-            	$post_edit->persist($post);
-            	$post_edit->flush();
-            	
-            	return $this->redirect(
-            		$this->generateUrl('detailPostLogueado',['id'=>$post->getId()])
-            	);
+                	$post_edit = $this->getDoctrine()->getManager();
+                	$post_edit->persist($post);
+                	$post_edit->flush();
+                	
+                	return $this->redirect(
+                		$this->generateUrl('detailPostLogueado',['id'=>$post->getId()])
+                	);                    
+                }
             }
 
         	return $this->render('@AppBundle/Resources/views/table_post/create_post.html.twig',[

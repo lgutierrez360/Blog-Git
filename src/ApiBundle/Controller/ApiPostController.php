@@ -37,7 +37,7 @@ class ApiPostController extends Controller{
     * @param  id | int. 
     */
     public function showPostAction(Request $request, $id=null){
-        
+
         #respuestas por default
         $data = [
             'status'       => 'error',
@@ -59,14 +59,23 @@ class ApiPostController extends Controller{
                 $post= $this->getDoctrine()->getRepository(Posts::class)->findOneBy([
                      'id' => $id
                 ]);
+                #Comprobamos la existencia del post
+                if( $post && is_object($post) && $post->getAuthor()->getId() ) {
 
-                if($post && is_object($post)) {            
-                    $post_array = $this->serializarPost($post);                    
-                    $data = [
-                        'status'       => 'success',
-                        'code'         => 200,               
-                        'post'         => $post_array                
-                    ];
+                    $id = $post->getAuthor()->getId();            
+                    $user= $this->getDoctrine()->getRepository(Users::class)->findOneBy([
+                     'id' => $id
+                    ]);
+                    #Comprobamos la existencia del user
+                    if( $user && !empty($user) && is_object($user) ) {
+                        
+                        $post_array = $this->serializarPost($post);                    
+                        $data = [
+                            'status'       => 'success',
+                            'code'         => 200,               
+                            'post'         => $post_array                
+                        ];                        
+                    }
                 }
             }        
         } 
