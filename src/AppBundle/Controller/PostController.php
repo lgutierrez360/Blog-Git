@@ -58,9 +58,18 @@ class PostController extends Controller{
     */
     public function tablePostUser($user){   
     	#Obtengo solo los posts posteados por el usuario actual 
-        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Posts::class)->createQueryBuilder('p')->select('p')
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Posts::class)->createQueryBuilder('p')
+            ->select('p')
         	->where('p.author = :author')        
         	->setParameter('author',$user->getId());
+
+            /* Misma consulta pero usando leftjoin con la tabla users
+            $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Posts::class)->createQueryBuilder('p')
+                ->select('p','u')
+                ->leftjoin('p.author','u')
+                ->where('p.author = :author')        
+                ->setParameter('author',$user->getId());
+            */             
 
         $table = (new Table())
             ->setRowsPerPage(10)

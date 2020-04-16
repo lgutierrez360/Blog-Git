@@ -49,16 +49,16 @@ class DefaultController extends Controller{
             $request
         );
     }
-    
+
     /**
     * @return  que recupera todos los POST (Blog)
     */
     public function tablePost(){   
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Posts::class)->createQueryBuilder('p')->select('p,u')
-            ->join('p.author','u')
-            ->where('u.active = :active')
-            ->setParameter('active','SI');                
+            ->leftjoin('p.author','u')
+            ->where('u.is_active = :active')
+            ->setParameter('active',true);                
 
         $table = (new Table())
             ->setRowsPerPage(10)
@@ -94,6 +94,15 @@ class DefaultController extends Controller{
                         (new Filter())
                             ->setField('p.create_at')
                             ->setName('p_create_at')
+                    )
+            )
+            ->addColumn(
+                (new Column())->setLabel('Autor')
+                    ->setSort(['u.nick' => 'asc'])
+                    ->setFilter(
+                        (new Filter())
+                            ->setField('u.nick')
+                            ->setName('u_nick')
                     )
             );           
         return $table;   

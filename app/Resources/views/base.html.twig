@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Blog!{% endblock %}</title>
-        <link rel="stylesheet" type="text/css" href="{{asset('vendor/bootstrap/css/bootstrap.min.css')}}">
         {% block stylesheets %}
+            <link rel="stylesheet" type="text/css" href="{{asset('vendor/bootstrap/css/bootstrap.min.css')}}">
             <style>
             .menu {
                 background: #343a40;
@@ -46,19 +46,29 @@
                             </li>
                             {% if app.user%}
                                 <!--Usuario Logueado-->
-                                <li class="derecha">
-                                    <a href="{{path('logout')}}">Cerrar Session</a>
+                                <li class="derecha nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" id="menu-categorias" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {{app.user.nick|upper}}
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="menu-categorias" style="background: #343a40;">
+                                        <a href="{{path('logout')}}" class="dropdown-item">Cerrar Session</a>
+
+                                    </div>
                                 </li>
-                                <li class="derecha">
-                                    <a href="{{path('post')}}">Publicaciones {{app.user.nick|upper}}</a>
+                                <li class="derecha nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" id="menu-categorias" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        TaskBoard   
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="menu-categorias" style="background: #343a40;">
+                                        <a href="{{path('post')}}" class="dropdown-item">Post</a>
+                                        
+                                        {% if app.user.administrator == 'SI' %}
+                                            <!--Usuario Administrador-->                                            
+                                            <a href="{{path('profile')}}" class="dropdown-item">Listado Usuarios</a>
+                                        {% endif %}                                                                                
+                                    </div>
                                 </li>
                                 
-                                {% if app.user.administrator == 'SI' %}
-                                    <!--Usuario Administrador-->
-                                    <li class="derecha">
-                                        <a href="{{path('profile')}}">Listado Usuarios</a>
-                                    </li>
-                                {% endif %}
                             {% else %}
                                 <!--Usuario no Logueado-->
                                 <li class="derecha">
@@ -79,7 +89,26 @@
 
         </header>
         {% block body %}{% endblock %}
-            <script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>            
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+                <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+                <link rel="stylesheet" type="text/css"
+                      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+                />
+                <link rel="stylesheet"
+                      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+                      integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+                      crossorigin="anonymous"
+                >
+                <script type="text/javascript"
+                        src="https://code.jquery.com/jquery-2.2.0.min.js"
+                >
+                </script>
+                <script type="text/javascript"
+                        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+                >
+                </script>
+                <!-- <script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>-->            
+
+        {% endblock %}
     </body>
 </html>

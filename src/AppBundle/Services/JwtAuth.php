@@ -33,7 +33,7 @@ class JwtAuth{
 			#comprobar si el usuario existe y esta activo
 			$user = $this->manager->getRepository(Users::class)->findOneBy([		
 				'email'    => $email,
-				'active'   => 'SI'
+				'is_active'   => true
 
 			]);
         }             

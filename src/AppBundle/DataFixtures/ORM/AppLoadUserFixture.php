@@ -35,7 +35,7 @@ class AppLoadUserFixture extends Fixture{
             $user->setSurname('user surname_'.$i);
             $user->setEmail('user_'.$i.'@gmail.com');
             $user->setNick('user nick_'.$i);
-            $user->setActive('NO');
+            $user->setIsActive(false);
             $user->setAdministrator('NO');
             $user->setPassword($psw);
             $user->setCreate_at(new \Datetime('now'));            

@@ -48,8 +48,8 @@ AppBundle\Entity\Users:
             options:
                 default: CURRENT_TIMESTAMP
             column: create_at
-        active:
-            type: string
+        is_active:
+            type: integer
             nullable: true
             length: 50
             options:

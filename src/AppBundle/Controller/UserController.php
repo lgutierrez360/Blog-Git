@@ -73,6 +73,7 @@ class UserController extends Controller{
 
             return $this->redirectToRoute('profile');
         }else{
+    
             return $this->render('@AppBundle/Resources/views/table_user/view_user.html.twig',[
                 'user'=>$user
 
@@ -92,9 +93,9 @@ class UserController extends Controller{
 
             return $this->redirectToRoute('profile');
         }else{
-            ($user->getActive() == 'SI')? $status = 'NO' : $status = 'SI';
+            ($user->getIsActive() == true)? $status = false : $status = true;
             
-            $user->setActive($status);
+            $user->setIsActive($status);
 
             $user_active = $this->getDoctrine()->getManager();
             $user_active->persist($user);
@@ -183,11 +184,25 @@ class UserController extends Controller{
             )
             ->addColumn(
                 (new Column())->setLabel('Activo')
-                    ->setSort(['u.active' => 'asc'])
+                    ->setSort(['u.is_active' => 'asc'])
                     ->setFilter(
                         (new Filter())
-                            ->setField('u.active')
-                            ->setName('u_active')
+                            ->setField('u.is_active')
+                            ->setName('u_is_active')
+                    )
+                    #setRaw(true) enabled styles
+                    ->setRaw(true)
+                    ->setDisplayCallback(
+                        function ($value, $row) {
+                            /* En este contexto $value almacena el valor de activo 0:false | 1:true
+                                return "<font color='red'>" .$value.'</font>';
+                            */
+                            if ($value) {
+                                return "<font color='green'><b>Activo</b></font>";
+                            } else {
+                                return "<font color='red'><b>Inactivo</b> </font>";
+                            }
+                        }
                     )
             )
             ->addColumn(

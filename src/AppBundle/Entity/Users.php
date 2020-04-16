@@ -56,9 +56,9 @@ class Users implements AdvancedUserInterface
     private $create_at = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var string
+     * @var integer
      */
-    private $active;
+    public $is_active;
 
     /**
      * @var string
@@ -220,27 +220,27 @@ class Users implements AdvancedUserInterface
     }
 
     /**
-     * Set active
+     * Set is_active
      *
-     * @param string $active
+     * @param integer $is_active
      *
      * @return Users
      */
-    public function setActive($active)
+    public function setIsActive($is_active)
     {
-        $this->active = $active;
+        $this->is_active = $is_active;
 
         return $this;
     }
 
     /**
-     * Get active
+     * Get is_active
      *
-     * @return string
+     * @return integer
      */
-    public function getActive()
+    public function getIsActive()
     {
-        return $this->active;
+        return $this->is_active;
     }
 
     /**
@@ -300,8 +300,7 @@ class Users implements AdvancedUserInterface
 
     public function isEnabled()
     {
-        return $this->active;
-        //return $this->isActive;
+        return $this->is_active;
     }
 
 }

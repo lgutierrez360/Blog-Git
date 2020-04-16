@@ -74,7 +74,7 @@ class SecurityController extends Controller{
     	        );
             	//$encoded =  $encoder->encodePassword($user,$user->getPassword());
             	$user->setPassword($password);
-            	$user->setActive('NO');
+            	$user->setIsActive(false);
                 $user->setAdministrator('NO');
                 $user->setCreate_at(new \Datetime('now'));
                 $user_insert= $this->getDoctrine()->getManager();

@@ -63,7 +63,7 @@
                                     <a href="{{ path('detailUser',{id:row.object.id}) }}">
                                         <i class="glyphicon glyphicon-search" title="Vizualizar User"></i>
                                     </a>
-                                    {% if row.object.active == "SI" %}
+                                    {% if row.object.is_active == true %}
                                         <!--  Desactivar User -->
                                         <a href="{{ path('estatusUser',{id:row.object.id}) }}">
                                             <i class="glyphicon glyphicon-hand-down" title="Desactivar User"></i>
